@@ -1,0 +1,41 @@
+---
+- name: azure devops
+  hosts: localhost
+  vars: 
+   - project: "test"
+   - repositoryId: "dc405b71-7049-48e1-ae42-15485e62a109"
+   - repositoryName: "test-ansible1"
+   - org: selvanayaki849
+   - pipeline_name: "test-ansible-ci-pipeline"
+  vars_prompt: 
+  - name: "username" 
+    prompt: "Enter your ADO username" 
+    private: no 
+  - name: "pat" 
+    prompt: "Enter your ADO PAT" 
+    private: yes
+  tasks:
+   - name: creating pipeline
+     ansible.builtin.uri:
+       url: "https://dev.azure.com/{{org}}/{{project}}/_apis/pipelines?api-version=7.1-preview.1"
+       user: "{{username}}"
+       password: {{pat}}
+       method: POST
+       headers:
+        Content-Type: application/json     
+       body_format: json
+       force_basic_auth: true
+       body:
+        {
+          folder: null,
+          name: "{{pipeline_name}}",
+          configuration: {
+            type: "yaml",
+            path: "/azure-pipelines.yml",
+            repository: {
+              id: "{{repositoryId}}",
+              name: "{{repositoryName}}",
+              type: "azureReposGit" } 
+              
+            } 
+        }

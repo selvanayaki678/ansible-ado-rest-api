@@ -1,0 +1,1 @@
+curl -u username:pat --request POST  https://dev.azure.com/{{org}}/{{project}}/_apis/pipelines?api-version=7.1-preview.1   -H Content-Type:"application/json" --header "Accept:application/json"  -d '{folder: null,name:"pipeline-made-by-api",configuration: {type: "yaml",path: "azure-pipelines.yml",repository: {id: "{{repo-id}}",name: "{{repo-name}}",type: "azureReposGit" } } }'

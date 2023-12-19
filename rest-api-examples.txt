@@ -1,1 +1,8 @@
 curl -u username:pat --request POST  https://dev.azure.com/{{org}}/{{project}}/_apis/pipelines?api-version=7.1-preview.1   -H Content-Type:"application/json" --header "Accept:application/json"  -d '{folder: null,name:"pipeline-made-by-api",configuration: {type: "yaml",path: "azure-pipelines.yml",repository: {id: "{{repo-id}}",name: "{{repo-name}}",type: "azureReposGit" } } }'
+# Read file content and encode it in base64
+file_content=$(base64 -w 0 /path/to/your/file.txt)
+
+# Create a new commit
+curl -X POST -H "Authorization: Bearer <YOUR-PAT>" -H "Content-Type: application/json" \
+-d "{\"comment\": \"Initial commit\", \"changes\": [{\"changeType\": \"add\", \"item\": {\"path\": \"/path/to/your/file.txt\"},\"newContent\": {\"content\": \"$file_content\",\"contentType\": \"base64Encoded\"}}]}" \
+"https://dev.azure.com/{organization}/{project}/_apis/git/repositories/{repositoryId}/pushes?api-version=6.0"
